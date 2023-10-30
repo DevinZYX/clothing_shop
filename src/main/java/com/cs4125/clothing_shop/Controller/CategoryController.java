@@ -16,18 +16,23 @@ import java.util.Objects;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-    @GetMapping("/")
+
+    @GetMapping("/list")
     public ResponseEntity<List<Category>> getCategories() {
-        List<Category> body = categoryService.listCategories();
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        List<Category> list = categoryService.listCategories();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody Category category) {
+
+        //check if the category name is already existed
         if (Objects.nonNull(categoryService.readCategory(category.getCategoryName()))) {
             return new ResponseEntity<ApiResponse>(new ApiResponse(false, "category already exists"), HttpStatus.CONFLICT);
         }
+
         categoryService.createCategory(category);
+
         return new ResponseEntity<>(new ApiResponse(true, "created the category"), HttpStatus.CREATED);
     }
 

@@ -19,16 +19,16 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(getApiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cs4125.clothing.shop"))
+                .apis(RequestHandlerSelectors.basePackage("com.cs4125.clothing_shop"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo getApiInfo() {
-        Contact contact = new Contact("webtutsplus", "http://webtutsplus.com", "contact.webtutsplus@gmail.com");
+        Contact contact = new Contact("Test", "http://test.com", "contact.test@gmail.com");
         return new ApiInfoBuilder()
-                .title("Ecommerce API")
-                .description("Documentation Ecommerce api")
+                .title("Clothing Shop API")
+                .description("Documentation clothing shop api")
                 .version("1.0.0")
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0")
