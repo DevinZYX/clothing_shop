@@ -62,6 +62,6 @@ public class Brand {
     }
     @Override
     public String toString(){
-        return "User {brand id=" + id + ", brand name =" + brandName + ", description=" + description + "}";
+        return "User {brand id = " + id + ", brand name = " + brandName + ", description = " + description + "}";
     }
 }
