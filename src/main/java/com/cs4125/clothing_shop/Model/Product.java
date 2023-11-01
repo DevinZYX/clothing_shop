@@ -28,6 +28,9 @@ public class Product {
     @JoinColumn(name = "brand_id", nullable = false)
     Brand brand;
 
+    public Product(){
+    }
+
 
     public Product(String name, String imageURL, double price, String description, Category category, Brand brand) {
         super();
@@ -86,6 +89,15 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
     @Override
     public String toString(){
         return "product id = " + id + ", product name = " + name + ", description = " + description + ", price = " + price + ", category:" + category + ", brand = " +brand;

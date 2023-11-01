@@ -10,7 +10,6 @@ public class ProductDto {
     private @NotNull double price;
     private @NotNull String description;
     private @NotNull Integer categoryId;
-
     private @NotNull Integer brandId;
 
     public ProductDto(@NotNull String name, @NotNull String imageURL, @NotNull double price, @NotNull String description, @NotNull Integer categoryId, @NotNull Integer brandId) {
@@ -29,6 +28,7 @@ public class ProductDto {
         this.setDescription(product.getDescription());
         this.setPrice(product.getPrice());
         this.setCategoryId(product.getCategory().getId());
+        this.setBrandId(product.getBrand().getId());
     }
 
     public ProductDto() {
