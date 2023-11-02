@@ -25,7 +25,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo getApiInfo() {
-        Contact contact = new Contact("Test", "http://test.com", "contact.test@gmail.com");
+        Contact contact = new Contact("Demo", "http://demo.com", "contact.demo@gmail.com");
         return new ApiInfoBuilder()
                 .title("Clothing Shop API")
                 .description("Documentation clothing shop api")
