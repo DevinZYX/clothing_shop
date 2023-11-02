@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
-
+//cart
 @Entity
 @Table(name="cart")
 public class Cart {
