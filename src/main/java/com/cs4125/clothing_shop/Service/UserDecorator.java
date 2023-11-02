@@ -1,7 +1,5 @@
 package com.cs4125.clothing_shop.Service;
 
-import com.cs4125.clothing_shop.Config.UserLevel;
-import com.cs4125.clothing_shop.Model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class UserDecorator extends User {
