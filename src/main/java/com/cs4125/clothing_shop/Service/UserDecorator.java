@@ -1,15 +1,16 @@
 package com.cs4125.clothing_shop.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.cs4125.clothing_shop.Model.User.User;
 
 public abstract class UserDecorator extends User {
-    @Autowired
-    private User decoratedUser;
+    protected User decoratedUser;
 
     public UserDecorator(User decoratedUser){
         this.decoratedUser = decoratedUser;
+    }
+    protected User getDecoratedUser() {
+        return decoratedUser;
     }
     @Override
     public Integer getId() {
@@ -22,27 +23,27 @@ public abstract class UserDecorator extends User {
     
     
     //RegularMember
-    public class RegularMemberDecorator extends UserDecorator {
+    public static class RegularMemberDecorator extends UserDecorator {
         private double totalPurchaseAmount = 0;
-    
+
         public RegularMemberDecorator(User decoratedUser) {
             super(decoratedUser);
         }
-    
+
         @Override
         public double getDiscount() {
-            return super.getDiscount() * 0.95; 
+            return super.getDiscount() * 0.95;
         }
-    
+
         @Override
         public void addPurchaseAmount(double amount) {
             totalPurchaseAmount += amount;
         }
-    
+
         @Override
         public String upgradeMembershipIfNeeded() {
             if (totalPurchaseAmount >= 10000) {
-                decoratedUser.setLevel("Silver");
+                getDecoratedUser().setLevel("Silver");
                 return "Silver";
             }
             return "Regular";
@@ -50,7 +51,7 @@ public abstract class UserDecorator extends User {
     }
     
     //SilverMember
-    public class SilverMemberDecorator extends UserDecorator {
+    public static class SilverMemberDecorator extends UserDecorator {
         private double totalPurchaseAmount = 0;
     
         public SilverMemberDecorator(User decoratedUser) {
@@ -59,7 +60,7 @@ public abstract class UserDecorator extends User {
     
         @Override
         public double getDiscount() {
-            return super.getDiscount() * 0.9; // 9折优惠
+            return super.getDiscount() * 0.9;
         }
     
         @Override
@@ -70,7 +71,7 @@ public abstract class UserDecorator extends User {
         @Override
         public String upgradeMembershipIfNeeded() {
             if (totalPurchaseAmount >= 50000) {
-                decoratedUser.setLevel("Gold");
+                getDecoratedUser().setLevel("Gold");
                 return "Gold";
             }
             return "Silver";
@@ -78,7 +79,7 @@ public abstract class UserDecorator extends User {
     }
     
     //GoldMember
-    public class GoldMemberDecorator extends UserDecorator {
+    public static class GoldMemberDecorator extends UserDecorator {
         private double couponAmount = 0;
     
         public GoldMemberDecorator(User decoratedUser) {

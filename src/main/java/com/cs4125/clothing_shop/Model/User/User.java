@@ -105,14 +105,11 @@ public abstract class User {
         return this.level;
     }
     public double getDiscount() {
-        switch (this.level) {
-            case "silver":
-                return 0.90; //10% discount for silver members
-            case "gold":
-                return 0.80; //20% discount for gold members
-            default:
-                return 0.95; //5% discount for normal members
-        }
+        return switch (this.level) {
+            case "silver" -> 0.90; //10% discount for silver members
+            case "gold" -> 0.80; //20% discount for gold members
+            default -> 0.95; //5% discount for normal members
+        };
     }
     
     public double getBonusForGoldMember() {
