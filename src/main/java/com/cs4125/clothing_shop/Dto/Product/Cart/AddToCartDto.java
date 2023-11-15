@@ -1,4 +1,4 @@
-package com.cs4125.clothing_shop.Dto.Product;
+package com.cs4125.clothing_shop.Dto.Product.Cart;
 
 
 import javax.validation.constraints.NotNull;

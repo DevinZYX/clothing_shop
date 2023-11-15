@@ -5,12 +5,14 @@ import com.cs4125.clothing_shop.Model.Brand;
 import com.cs4125.clothing_shop.Model.Category;
 import com.cs4125.clothing_shop.Model.Product;
 import com.cs4125.clothing_shop.Repository.ProductRepo;
+import com.exceptions.ProductNotExistException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -56,6 +58,14 @@ public class ProductService {
         // update
         productRepo.save(product);
     }
+
+    //getProductId
+    public Product getProductById(Integer productId) throws ProductNotExistException {
+        Optional<Product> optionalProduct = productRepo.findById(productId);
+        if(!optionalProduct.isPresent())
+           throw new ProductNotExistException("Prodcut id is invalid" + productId);
+        return optionalProduct.get();    
+        }
 
 
 }

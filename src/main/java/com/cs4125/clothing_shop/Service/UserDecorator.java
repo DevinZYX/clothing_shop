@@ -2,6 +2,8 @@ package com.cs4125.clothing_shop.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.cs4125.clothing_shop.Model.User.User;
+
 public abstract class UserDecorator extends User {
     @Autowired
     private User decoratedUser;
