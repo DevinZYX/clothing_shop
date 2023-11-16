@@ -1,9 +1,11 @@
 package com.cs4125.clothing_shop.Model;
 
+import com.cs4125.clothing_shop.Discount.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.lang.invoke.SwitchPoint;
 
 @Entity
 @Table(name = "products")
@@ -18,6 +20,14 @@ public class Product {
     private @NotNull double price;
     private @NotNull String description;
 
+
+    @Transient
+    @JsonIgnore
+    private DiscountState discountState;
+
+    @Enumerated(EnumType.STRING)
+    private Discount discount;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
@@ -29,10 +39,11 @@ public class Product {
     Brand brand;
 
     public Product(){
+
     }
 
 
-    public Product(String name, String imageURL, double price, String description, Category category, Brand brand) {
+    public Product(String name, String imageURL, double price, String description, Category category, Brand brand, Discount discount) {
         super();
         this.name = name;
         this.imageURL = imageURL;
@@ -40,6 +51,8 @@ public class Product {
         this.description = description;
         this.category = category;
         this.brand = brand;
+        setDiscount(discount);
+        updateDiscountState(discount);
     }
 
     public Integer getId() {
@@ -96,6 +109,43 @@ public class Product {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+
+
+    public void setDiscountState(Discount discount) {
+        updateDiscountState(discount);
+    }
+
+    public DiscountState getDiscountState(){
+        return discountState;
+    }
+
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+        updateDiscountState(discount);
+    }
+
+
+    private void updateDiscountState(Discount discount) {
+        switch (discount) {
+            case NO_DISCOUNT:
+                this.discountState = new NoDiscountState();
+                break;
+            case MID_SEASON_DISCOUNT:
+                this.discountState = new MidSeasonDiscountState();
+                break;
+            case CLEARANCE_DISCOUNT:
+                this.discountState = new ClearanceDiscount();
+                break;
+            default:
+                throw new IllegalArgumentException("Incorrect discount state");
+        }
     }
 
     @Override

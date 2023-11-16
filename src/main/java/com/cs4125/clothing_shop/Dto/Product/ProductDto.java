@@ -1,6 +1,14 @@
 package com.cs4125.clothing_shop.Dto.Product;
 
+import com.cs4125.clothing_shop.Discount.*;
+
 import com.cs4125.clothing_shop.Model.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 public class ProductDto {
@@ -12,14 +20,26 @@ public class ProductDto {
     private @NotNull Integer categoryId;
     private @NotNull Integer brandId;
 
-    public ProductDto(@NotNull String name, @NotNull String imageURL, @NotNull double price, @NotNull String description, @NotNull Integer categoryId, @NotNull Integer brandId) {
+
+    @Enumerated(EnumType.STRING)
+    private @NotNull Discount discount;
+
+    @Transient
+    @JsonIgnore
+    private DiscountState discountState;
+
+
+    public ProductDto(@NotNull String name, @NotNull String imageURL, @NotNull double price, @NotNull String description, @NotNull Integer categoryId, @NotNull Integer brandId, @NotNull Discount discount) {
         this.name = name;
         this.imageURL = imageURL;
         this.price = price;
         this.description = description;
         this.categoryId = categoryId;
         this.brandId = brandId;
+        setDiscount(discount);
     }
+
+
 
     public ProductDto(Product product) {
         this.setId(product.getId());
@@ -29,6 +49,7 @@ public class ProductDto {
         this.setPrice(product.getPrice());
         this.setCategoryId(product.getCategory().getId());
         this.setBrandId(product.getBrand().getId());
+        this.setDiscount(product.getDiscount());
     }
 
     public ProductDto() {
@@ -85,6 +106,21 @@ public class ProductDto {
     public Integer getBrandId() {
         return brandId;
     }
+
+
+    public DiscountState getDiscountState(){
+        return discountState;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
+
+
 
     public void setBrandId(Integer brandId) {
         this.brandId = brandId;

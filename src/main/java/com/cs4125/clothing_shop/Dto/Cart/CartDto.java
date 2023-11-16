@@ -1,4 +1,4 @@
-package com.cs4125.clothing_shop.Dto.Product.Cart;
+package com.cs4125.clothing_shop.Dto.Cart;
 import java.util.List;
 
 public class CartDto {
