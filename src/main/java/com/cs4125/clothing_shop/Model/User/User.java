@@ -1,7 +1,5 @@
 package com.cs4125.clothing_shop.Model.User;
 
-import com.cs4125.clothing_shop.Config.UserLevel;
-
 import javax.persistence.*;
 
 @Entity
@@ -25,6 +23,11 @@ public abstract class User {
 
     @Column(name = "level")
     private String level;
+
+    @Column(name = "purchase_amount")
+    private double purchaseAmount;
+
+
 
     public User(String firstName, String lastName, String email, String password, String level) {
         this.firstName = firstName;
@@ -86,8 +89,33 @@ public abstract class User {
         this.level = level;
     }
 
-
-    public double getDiscount(){
-        return 1.0;
+    public void addPurchaseAmount(double amount) {
+        this.purchaseAmount += amount;
+        upgradeMembershipIfNeeded();
     }
+
+    protected String upgradeMembershipIfNeeded() {
+        if ("normal".equals(this.level) && this.purchaseAmount >= 10000) {
+            this.level = "silver";
+            return "silver";
+        } else if ("silver".equals(this.level) && this.purchaseAmount >= 50000) {
+            this.level = "gold";
+            return "gold";
+        }
+        return this.level;
+    }
+    public double getDiscount() {
+        return switch (this.level) {
+            case "silver" -> 0.90; //10% discount for silver members
+            case "gold" -> 0.80; //20% discount for gold members
+            default -> 0.95; //5% discount for normal members
+        };
+    }
+    
+    public double getBonusForGoldMember() {
+        if ("gold".equals(this.level)) {
+            return Math.floor(this.purchaseAmount / 1000) * 10; // 10 unit bonus for every 1000 units spent
+        }
+        return 0;
+    } 
 }
