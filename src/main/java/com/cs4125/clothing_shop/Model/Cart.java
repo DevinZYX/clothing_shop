@@ -1,5 +1,7 @@
 package com.cs4125.clothing_shop.Model;
 
+import com.cs4125.clothing_shop.Model.User.User;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

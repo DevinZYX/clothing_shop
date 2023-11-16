@@ -1,8 +1,8 @@
 package com.cs4125.clothing_shop.Service;
 
-import com.cs4125.clothing_shop.Dto.Product.Cart.AddToCartDto;
-import com.cs4125.clothing_shop.Dto.Product.Cart.CartDto;
-import com.cs4125.clothing_shop.Dto.Product.Cart.CartItemDto;
+import com.cs4125.clothing_shop.Dto.Cart.AddToCartDto;
+import com.cs4125.clothing_shop.Dto.Cart.CartDto;
+import com.cs4125.clothing_shop.Dto.Cart.CartItemDto;
 import com.cs4125.clothing_shop.Model.Cart;
 import com.cs4125.clothing_shop.Model.Product;
 import com.cs4125.clothing_shop.Model.User.User;

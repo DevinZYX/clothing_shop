@@ -1,5 +1,6 @@
 package com.cs4125.clothing_shop.Service;
 
+import com.cs4125.clothing_shop.Discount.*;
 import com.cs4125.clothing_shop.Dto.Product.ProductDto;
 import com.cs4125.clothing_shop.Model.Brand;
 import com.cs4125.clothing_shop.Model.Category;
@@ -28,6 +29,7 @@ public class ProductService {
         product.setPrice(productDto.getPrice());
         product.setName(productDto.getName());
         product.setBrand(brand);
+        product.setDiscount(productDto.getDiscount());
         return product;
     }
 
@@ -51,8 +53,9 @@ public class ProductService {
     }
 
     // update a product
-    public void updateProduct(Integer productID, ProductDto productDto, Category category, Brand brand) {
+    public void updateProduct(Integer productID, ProductDto productDto, Category category, Brand brand, Discount discount) {
         Product product = getProductFromDto(productDto, category, brand);
+        product.setDiscount(discount);
         // set the id for updating
         product.setId(productID);
         // update
@@ -65,7 +68,16 @@ public class ProductService {
         if(!optionalProduct.isPresent())
            throw new ProductNotExistException("Prodcut id is invalid" + productId);
         return optionalProduct.get();    
-        }
+    }
+
+
+    public double getDiscountedPrice(Integer id) throws ProductNotExistException {
+        Product product = getProductById(id);
+        product.setDiscountState(product.getDiscount());
+        DiscountState discountState = product.getDiscountState();
+        return discountState.applyDiscount(product.getPrice());
+    }
+
 
 
 }
