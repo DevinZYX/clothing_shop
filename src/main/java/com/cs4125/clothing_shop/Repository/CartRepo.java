@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartRepo extends JpaRepository<Cart, Integer> {
     List<Cart> findAllByUserOrderByCreatedDateDesc(User user);
+    void deleteByUser(User user);
 }
