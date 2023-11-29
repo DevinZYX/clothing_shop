@@ -11,12 +11,14 @@ public class BasicInquiryHandler implements Handler {
     }
 
     @Override
-    public void handleRequest(CustomerRequest request) {
-        if (request.getType().equals("inquiry")) {
-            // Handling of inquiries
-            System.out.println("Handling basic inquiry: " + request.getDetails());
+    public String handleRequest(CustomerRequest request) {
+        if ("inquiry".equals(request.getType())) {
+            String response = "Handling basic inquiry: " + request.getDetails();
+            System.out.println(response); // or log it
+            return response;
         } else if (nextHandler != null) {
-            nextHandler.handleRequest(request);
+            return nextHandler.handleRequest(request);
         }
+        return "Request type not supported.";
     }
 }

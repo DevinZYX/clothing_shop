@@ -8,6 +8,8 @@ import com.cs4125.clothing_shop.Model.Product;
 import com.cs4125.clothing_shop.Repository.ProductRepo;
 import com.exceptions.ProductNotExistException;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     private ProductRepo productRepo;
+
+    private final Timer getProductByIdTimer;
 
 
     public static Product getProductFromDto(ProductDto productDto, Category category, Brand brand) {
@@ -43,13 +47,13 @@ public class ProductService {
     public List<ProductDto> listProducts() {
         // first fetch all the products
         List<Product> products = productRepo.findAll();
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductDto> productDto = new ArrayList<>();
 
         for(Product product : products) {
             // for each product change it to DTO
-            productDtos.add(new ProductDto(product));
+            productDto.add(new ProductDto(product));
         }
-        return productDtos;
+        return productDto;
     }
 
     // update a product
@@ -61,15 +65,25 @@ public class ProductService {
         // update
         productRepo.save(product);
     }
-
-    //getProductId
-    public Product getProductById(Integer productId) throws ProductNotExistException {
-        Optional<Product> optionalProduct = productRepo.findById(productId);
-        if(!optionalProduct.isPresent())
-           throw new ProductNotExistException("Prodcut id is invalid" + productId);
-        return optionalProduct.get();    
+    public ProductService(MeterRegistry meterRegistry) {
+        // Create a timer metric
+        this.getProductByIdTimer = meterRegistry.timer("getProductById.time");
     }
+    //getProductId
+    public Product getProductById(Integer productId){
+        return getProductByIdTimer.record(() -> {
+            // Actual method implementation
+            Optional<Product> optionalProduct = productRepo.findById(productId);
+            if (optionalProduct.isEmpty())
+                try {
+                    throw new ProductNotExistException("Product id is invalid " + productId);
+                } catch (ProductNotExistException e) {
+                    throw new RuntimeException(e);
+                }
+            return optionalProduct.get();
+        });
 
+    }
 
     public double getDiscountedPrice(Integer id) throws ProductNotExistException {
         Product product = getProductById(id);

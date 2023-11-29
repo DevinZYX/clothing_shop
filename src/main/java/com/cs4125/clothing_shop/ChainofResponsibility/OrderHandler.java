@@ -9,12 +9,14 @@ public class OrderHandler implements Handler {
     }
 
     @Override
-    public void handleRequest(CustomerRequest request) {
-        if (request.getType().equals("order")) {
-            // Processing orders
-            System.out.println("Processing order: " + request.getDetails());
+    public String handleRequest(CustomerRequest request) {
+        if ("order".equals(request.getType())) {
+            String response = "Processing order: " + request.getDetails();
+            System.out.println(response); // You can also use a logger here
+            return response;
         } else if (nextHandler != null) {
-            nextHandler.handleRequest(request);
+            return nextHandler.handleRequest(request);
         }
+        return "Order request type not handled.";
     }
 }
