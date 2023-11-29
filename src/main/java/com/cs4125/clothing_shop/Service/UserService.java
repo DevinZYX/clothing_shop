@@ -1,5 +1,7 @@
 package com.cs4125.clothing_shop.Service;
 
+import com.cs4125.clothing_shop.ChainofResponsibility.CustomerRequest;
+import com.cs4125.clothing_shop.ChainofResponsibility.Handler;
 import com.cs4125.clothing_shop.Dto.Product.User.SignInDto;
 import com.cs4125.clothing_shop.Dto.Product.User.SignInResponseDto;
 import com.cs4125.clothing_shop.Dto.Product.User.SignUpResponseDto;
@@ -14,6 +16,8 @@ public class UserService {
 
     @Autowired
     UserRepo userRepository;
+
+    private final Handler supportChain;
 
     //signup
     public SignUpResponseDto signUp(SignupDto signupDto){
@@ -40,5 +44,14 @@ public class UserService {
             case "Silver" -> new UserDecorator.SilverMemberDecorator(user);
             default -> new UserDecorator.RegularMemberDecorator(user);
         };
+    }
+
+    // Constructor injection of the support chain
+    @Autowired
+    public UserService(Handler supportChain) {
+        this.supportChain = supportChain;
+    }
+    public void handleCustomerRequest(CustomerRequest request) {
+        supportChain.handleRequest(request);
     }
 }
