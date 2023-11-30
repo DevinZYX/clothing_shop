@@ -33,22 +33,28 @@ public class UserService {
 
     private final Handler supportChain;
 
-    public User addPurchase(SignInDto signInDto, double amount) {
-        User user = userRepository.findByEmail(signInDto.getEmail());
-        if (user != null) {
-            UserDecorator decoratedUser = decorateUser(user);
-            decoratedUser.addPurchaseAmount(amount);
-            userRepository.save(user);
-        }
-        return user;
-    }
+    @Autowired
+    private CartService cartService;
 
-    private UserDecorator decorateUser(User user) {
-        return switch (user.getLevel()) {
-            case "Gold" -> new UserDecorator.GoldMemberDecorator(user);
-            case "Silver" -> new UserDecorator.SilverMemberDecorator(user);
-            default -> new UserDecorator.RegularMemberDecorator(user);
-        };
+    public String getUserLevel(User user) {
+        double totalPurchaseAmount = cartService.getTotalPriceFromCart(user);
+        UserDecorator userDecorator;
+
+        String level = user.getLevel();
+        if (level == null) {
+            return "Regular";
+        }
+
+        if (user.getLevel().equals("Regular")) {
+            userDecorator = new UserDecorator.RegularMemberDecorator(user);
+        } else if (user.getLevel().equals("Silver")) {
+            userDecorator = new UserDecorator.SilverMemberDecorator(user);
+        } else {
+            userDecorator = new UserDecorator.GoldMemberDecorator(user);
+        }
+
+        userDecorator.addPurchaseAmount(totalPurchaseAmount);
+        return userDecorator.upgradeMembershipIfNeeded();
     }
 
     // Constructor injection of the support chain

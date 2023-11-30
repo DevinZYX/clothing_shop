@@ -94,7 +94,7 @@ public class User {
         upgradeMembershipIfNeeded();
     }
 
-    protected String upgradeMembershipIfNeeded() {
+    public String upgradeMembershipIfNeeded() {
         if ("normal".equals(this.level) && this.purchaseAmount >= 10000) {
             this.level = "silver";
             return "silver";

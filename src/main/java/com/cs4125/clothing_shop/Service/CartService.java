@@ -47,4 +47,16 @@ public class CartService {
     public void deleteUserCartItems(User user) {
         cartRepository.deleteByUser(user);
     }
+
+    public double getTotalPriceFromCart(User user) {
+
+        List<Cart> cartList = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
+
+        double totalCost = 0;
+        for (Cart cart : cartList) {
+            totalCost += cart.getProduct().getPrice() * cart.getQuantity();
+        }
+
+        return totalCost;
+    }
 }

@@ -8,6 +8,7 @@ import com.cs4125.clothing_shop.Dto.Product.User.SignInResponseDto;
 import com.cs4125.clothing_shop.Dto.Product.User.SignUpResponseDto;
 import com.cs4125.clothing_shop.Dto.Product.User.SignupDto;
 import com.cs4125.clothing_shop.Model.User.User;
+import com.cs4125.clothing_shop.Service.AuthenticationService;
 import com.cs4125.clothing_shop.Service.UserService;
 import com.exceptions.AuthenticationFailException;
 import com.exceptions.CustomException;
@@ -21,6 +22,10 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthenticationService authenticationService;
+
 
     // Constructor injection of UserService
     @Autowired
@@ -52,12 +57,17 @@ public class UserController {
         return userService.signIn(signInDto);
     }
 
-    @PostMapping("/purchase")
-    public ResponseEntity<User> addPurchase(@RequestBody SignInDto signInDto, @RequestParam double amount) {
-        User user = userService.addPurchase(signInDto, amount);
+    @PostMapping("/getUserLevel")
+    public ResponseEntity<String> getUserLevel(@RequestParam("token") String token) throws AuthenticationFailException {
+
+        authenticationService.authenticate(token);
+        User user = authenticationService.getUser(token);
+
         if (user != null) {
-            return ResponseEntity.ok(user);
+            String newLevel = userService.getUserLevel(user);
+            return ResponseEntity.ok(newLevel);
         }
+
         return ResponseEntity.notFound().build();
     }
     // Endpoint to handle customer requests
