@@ -2,9 +2,8 @@ package com.cs4125.clothing_shop.Service;
 
 import com.cs4125.clothing_shop.Discount.*;
 import com.cs4125.clothing_shop.Dto.Product.ProductDto;
-import com.cs4125.clothing_shop.Model.Brand;
-import com.cs4125.clothing_shop.Model.Category;
-import com.cs4125.clothing_shop.Model.Product;
+import com.cs4125.clothing_shop.Model.*;
+import com.cs4125.clothing_shop.Observer.OrderObserver;
 import com.cs4125.clothing_shop.Repository.ProductRepo;
 import com.exceptions.ProductNotExistException;
 
@@ -18,9 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductService implements OrderObserver {
     @Autowired
     private ProductRepo productRepo;
+
 
     private final Timer getProductByIdTimer;
 
@@ -69,6 +69,9 @@ public class ProductService {
         // Create a timer metric
         this.getProductByIdTimer = meterRegistry.timer("getProductById.time");
     }
+
+
+
     //getProductId
     public Product getProductById(Integer productId){
         return getProductByIdTimer.record(() -> {
@@ -93,5 +96,14 @@ public class ProductService {
     }
 
 
-
+    @Override
+    public void onOrderPlaced(Order order) {
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = item.getProduct();
+            int newStock = product.getStock() - item.getQuantity();
+            product.setStock(newStock);
+            // Save the updated product
+            productRepo.save(product);
+        }
+    }
 }

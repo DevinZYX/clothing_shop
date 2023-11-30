@@ -1,5 +1,7 @@
 package com.cs4125.clothing_shop.Controller;
 
+import com.cs4125.clothing_shop.Command.Command;
+import com.cs4125.clothing_shop.Command.addToCartCommand;
 import com.cs4125.clothing_shop.Service.ProductService;
 import com.exceptions.AuthenticationFailException;
 import com.exceptions.ProductNotExistException;
@@ -45,7 +47,8 @@ public class CartController {
 
         // find the product to add and add item by service
         Product product = productService.getProductById(addToCartDto.getProductId());
-        cartService.addToCart(addToCartDto, product, user);
+        Command command = new addToCartCommand(cartService,addToCartDto,product,user);
+        command.execute();
 
         // return response
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);

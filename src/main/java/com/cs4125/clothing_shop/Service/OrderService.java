@@ -5,7 +5,9 @@ import com.cs4125.clothing_shop.Dto.Cart.CartItemDto;
 import com.cs4125.clothing_shop.Dto.CheckoutItemDto;
 import com.cs4125.clothing_shop.Model.Order;
 import com.cs4125.clothing_shop.Model.OrderItem;
+import com.cs4125.clothing_shop.Model.Product;
 import com.cs4125.clothing_shop.Model.User.User;
+import com.cs4125.clothing_shop.Observer.OrderObserver;
 import com.cs4125.clothing_shop.Repository.OrderItemsRepo;
 import com.cs4125.clothing_shop.Repository.OrderRepo;
 import com.stripe.Stripe;
@@ -37,14 +39,14 @@ public class OrderService {
     @Autowired
     OrderItemsRepo orderItemsRepository;
 
-    @Value("${BASE_URL}")
-    private String baseURL;
 
-    @Value("${STRIPE_SECRET_KEY}")
-    private String apiKey;
+    private List<OrderObserver> observers = new ArrayList<>();
 
+    public OrderService(ProductService productService) {
 
-    public void placeOrder(User user, String sessionId) {
+        observers.add(productService);
+    }
+    public void placeOrder(User user) {
         // first let get cart items for the user
         CartDto cartDto = cartService.listCartItems(user);
 
@@ -53,7 +55,6 @@ public class OrderService {
         // create the order and save it
         Order newOrder = new Order();
         newOrder.setCreatedDate(new Date());
-        newOrder.setSessionId(sessionId);
         newOrder.setUser(user);
         newOrder.setTotalPrice(cartDto.getTotalCost());
         orderRepository.save(newOrder);
@@ -68,6 +69,11 @@ public class OrderService {
             orderItem.setOrder(newOrder);
             // add to order item list
             orderItemsRepository.save(orderItem);
+
+        }
+
+        for (OrderObserver observer : observers) {
+            observer.onOrderPlaced(newOrder);
         }
 
         //

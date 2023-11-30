@@ -19,6 +19,7 @@ public class ProductDto {
     private @NotNull String description;
     private @NotNull Integer categoryId;
     private @NotNull Integer brandId;
+    private @NotNull Integer stock;
 
 
     @Enumerated(EnumType.STRING)
@@ -29,13 +30,14 @@ public class ProductDto {
     private DiscountState discountState;
 
 
-    public ProductDto(@NotNull String name, @NotNull String imageURL, @NotNull double price, @NotNull String description, @NotNull Integer categoryId, @NotNull Integer brandId, @NotNull Discount discount) {
+    public ProductDto(@NotNull String name, @NotNull String imageURL, @NotNull double price, @NotNull String description, @NotNull Integer categoryId, @NotNull Integer brandId, @NotNull Discount discount, @NotNull int stock){
         this.name = name;
         this.imageURL = imageURL;
         this.price = price;
         this.description = description;
         this.categoryId = categoryId;
         this.brandId = brandId;
+        this.stock = stock;
         setDiscount(discount);
     }
 
@@ -50,6 +52,7 @@ public class ProductDto {
         this.setCategoryId(product.getCategory().getId());
         this.setBrandId(product.getBrand().getId());
         this.setDiscount(product.getDiscount());
+        this.setStock(product.getStock());
     }
 
     public ProductDto() {
@@ -120,7 +123,13 @@ public class ProductDto {
         this.discount = discount;
     }
 
+    public Integer getStock() {
+        return stock;
+    }
 
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 
     public void setBrandId(Integer brandId) {
         this.brandId = brandId;

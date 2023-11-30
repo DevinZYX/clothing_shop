@@ -1,5 +1,7 @@
 package com.cs4125.clothing_shop.Controller;
 
+import com.cs4125.clothing_shop.Command.Command;
+import com.cs4125.clothing_shop.Command.PlaceOrderCommand;
 import com.cs4125.clothing_shop.Config.ApiResponse;
 
 import com.cs4125.clothing_shop.Model.Order;
@@ -28,14 +30,15 @@ public class OrderController {
 
     // place order after checkout
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> placeOrder(@RequestParam("token") String token, @RequestParam("sessionId") String sessionId)
+    public ResponseEntity<ApiResponse> placeOrder(@RequestParam("token") String token)
             throws AuthenticationFailException {
         // validate token
         authenticationService.authenticate(token);
         // retrieve user
         User user = authenticationService.getUser(token);
         // place the order
-        orderService.placeOrder(user, sessionId);
+        Command command = new PlaceOrderCommand(orderService,user);
+        command.execute();
         return new ResponseEntity<>(new ApiResponse(true, "Order has been placed"), HttpStatus.CREATED);
     }
 

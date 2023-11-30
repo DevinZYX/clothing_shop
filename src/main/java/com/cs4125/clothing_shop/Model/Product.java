@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.lang.invoke.SwitchPoint;
 
 @Entity
 @Table(name = "products")
@@ -18,6 +17,8 @@ public class Product {
     private @NotNull String name;
     private @NotNull String imageURL;
     private @NotNull double price;
+
+    private @NotNull int stock;
     private @NotNull String description;
 
 
@@ -38,12 +39,13 @@ public class Product {
     @JoinColumn(name = "brand_id", nullable = false)
     Brand brand;
 
+
     public Product(){
 
     }
 
 
-    public Product(String name, String imageURL, double price, String description, Category category, Brand brand, Discount discount) {
+    public Product(String name, String imageURL, double price, String description, Category category, Brand brand, Discount discount, int stock) {
         super();
         this.name = name;
         this.imageURL = imageURL;
@@ -51,6 +53,7 @@ public class Product {
         this.description = description;
         this.category = category;
         this.brand = brand;
+        this.stock = stock;
         setDiscount(discount);
         updateDiscountState(discount);
     }
@@ -146,6 +149,17 @@ public class Product {
             default:
                 throw new IllegalArgumentException("Incorrect discount state");
         }
+    }
+
+
+
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     @Override
