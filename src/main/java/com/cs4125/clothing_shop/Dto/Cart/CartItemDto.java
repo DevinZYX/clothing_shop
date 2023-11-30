@@ -30,6 +30,7 @@ public class CartItemDto {
         return product;
     }
 
+
     public void setProduct(Product prodcut){
         this.product = prodcut;
     }

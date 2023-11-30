@@ -1,5 +1,8 @@
 package com.cs4125.clothing_shop.Controller;
 
+import com.cs4125.clothing_shop.Command.Command;
+import com.cs4125.clothing_shop.Command.addProductCommand;
+import com.cs4125.clothing_shop.Command.updateProductCommand;
 import com.cs4125.clothing_shop.Config.ApiResponse;
 import com.cs4125.clothing_shop.Discount.Discount;
 import com.cs4125.clothing_shop.Dto.Product.ProductDto;
@@ -38,7 +41,8 @@ public class ProductController {
         }
         Category category = optionalCategory.get();
         Brand brand = optionalBrand.get();
-        productService.addProduct(productDto, category, brand);
+        Command command = new addProductCommand(productService,productDto,category,brand);
+        command.execute();
         return new ResponseEntity<>(new ApiResponse(true, "Product has been added"), HttpStatus.CREATED);
     }
 
@@ -69,7 +73,8 @@ public class ProductController {
         Discount discount = productDto.getDiscount();
         Category category = optionalCategory.get();
         Brand brand = optionalBrand.get();
-        productService.updateProduct(productID, productDto, category, brand, discount);
+        Command command = new updateProductCommand(productService,productID,productDto,category,brand,discount);
+        command.execute();
         return new ResponseEntity<>(new ApiResponse(true, "Product has been updated"), HttpStatus.OK);
     }
 

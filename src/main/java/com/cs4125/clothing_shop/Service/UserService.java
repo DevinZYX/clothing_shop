@@ -31,7 +31,7 @@ public class UserService {
     @Autowired
     AuthenticationService authenticationService;
 
-    private final Handler supportChain;
+    private Handler supportChain;
 
     @Autowired
     private CartService cartService;
@@ -56,6 +56,8 @@ public class UserService {
         userDecorator.addPurchaseAmount(totalPurchaseAmount);
         return userDecorator.upgradeMembershipIfNeeded();
     }
+
+    public UserService(){}
 
     // Constructor injection of the support chain
     @Autowired
